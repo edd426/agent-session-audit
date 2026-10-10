@@ -280,7 +280,8 @@ class HomeFolderTest(unittest.TestCase):
             result = subprocess.run(
                 [sys.executable, str(MODULE_PATH.with_name(script)), "--root", projects,
                  "--json-out", str(self.out / (script + ".json"))] + extra,
-                capture_output=True, text=True, encoding="utf-8", env=dict(os.environ))
+                capture_output=True, text=True, encoding="utf-8", errors="replace",
+                env=dict(os.environ))
             self.assertEqual(result.returncode, 0, result.stderr)
             printed[script] = result.stdout
         written = {path.name: path.read_text(encoding="utf-8")
@@ -303,4 +304,5 @@ class HomeFolderTest(unittest.TestCase):
 
 
 if __name__ == "__main__":
+    AUDIT.audit_common.utf8_stdio()
     unittest.main(verbosity=2)

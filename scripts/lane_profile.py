@@ -197,7 +197,7 @@ def selftest():
                                       "input_tokens": 10, "output_tokens": 100}}}
     with tempfile.TemporaryDirectory() as td:
         os.makedirs(os.path.join(td, "p"))
-        with open(os.path.join(td, "p", "a.jsonl"), "w") as f:
+        with open(os.path.join(td, "p", "a.jsonl"), "w", encoding="utf-8") as f:
             for r in [row(1, 0, 100_000, 0), row(2, 100_000, 5_000, 0),
                       row(2, 100_000, 5_000, 0, mid="m2None"),        # duplicate
                       row(10, 1_000, 90_000, 0),                      # invalidation (5m ttl, gap 8m>5.5 -> expiry!)
@@ -237,6 +237,7 @@ def selftest():
 
 
 def main():
+    audit_common.utf8_stdio()
     # What this prints shows the home folder as `~`, like the JSON it writes.
     with audit_common.home_relative_stdout():
         return _main()

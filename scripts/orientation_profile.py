@@ -1438,7 +1438,9 @@ def _sqlite_ro(path: Path):
     is not an option, and neither is copying it somewhere first.
     """
     import sqlite3
-    uri = "file:%s?immutable=1" % str(path).replace("?", "%3f").replace("#", "%23")
+    # as_uri() percent-encodes `?`, `#` and spaces and writes a Windows drive
+    # as file:///C:/..., the form SQLite documents.
+    uri = Path(path).resolve().as_uri() + "?immutable=1"
     return sqlite3.connect(uri, uri=True, timeout=1.0)
 
 
@@ -8596,6 +8598,7 @@ def _run_selftest() -> int:
 
 
 def main(argv: Optional[Sequence[str]] = None) -> int:
+    audit_common.utf8_stdio()
     args = parser().parse_args(argv)
     try:
         with audit_common.home_relative_stdout():

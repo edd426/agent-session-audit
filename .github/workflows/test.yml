@@ -16,21 +16,37 @@ jobs:
       run:
         shell: bash
         working-directory: scripts
+    # One step per suite, each run even when an earlier one failed
+    # (`!cancelled()`), so a single run shows every failure. The job still
+    # fails if any step did.
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python }}
-      - name: Unit suites
-        run: |
-          python test_audit_common.py
-          python test_claude_cache_audit.py
-          python test_orientation_profile.py
-          python test_demo_history.py
-      - name: Self-tests
-        run: |
-          python lane_profile.py --selftest
-          python compact_economics.py --selftest
-          python tool_bloat.py --selftest
-          python orientation_profile.py selftest
-          python session_ledger.py selftest
+      - name: test_audit_common
+        run: python test_audit_common.py
+      - name: test_claude_cache_audit
+        if: ${{ !cancelled() }}
+        run: python test_claude_cache_audit.py
+      - name: test_orientation_profile
+        if: ${{ !cancelled() }}
+        run: python test_orientation_profile.py
+      - name: test_demo_history
+        if: ${{ !cancelled() }}
+        run: python test_demo_history.py
+      - name: lane_profile selftest
+        if: ${{ !cancelled() }}
+        run: python lane_profile.py --selftest
+      - name: compact_economics selftest
+        if: ${{ !cancelled() }}
+        run: python compact_economics.py --selftest
+      - name: tool_bloat selftest
+        if: ${{ !cancelled() }}
+        run: python tool_bloat.py --selftest
+      - name: orientation_profile selftest
+        if: ${{ !cancelled() }}
+        run: python orientation_profile.py selftest
+      - name: session_ledger selftest
+        if: ${{ !cancelled() }}
+        run: python session_ledger.py selftest

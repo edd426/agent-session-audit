@@ -171,6 +171,7 @@ def selftest():
     print("selftest OK")
 
 def main():
+    audit_common.utf8_stdio()
     # What this prints shows the home folder as `~`, like the JSON it writes.
     with audit_common.home_relative_stdout():
         return _main()

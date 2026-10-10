@@ -46,7 +46,7 @@ from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from audit_common import make_private_dir                     # noqa: E402
+from audit_common import make_private_dir, utf8_stdio         # noqa: E402
 
 SCHEMA_VERSION = 1
 KEY = "session_id"
@@ -171,7 +171,8 @@ def _atomic_write(path: Path, text: str) -> None:
     # mkstemp creates the file 0600, and os.replace keeps that mode.
     handle, temporary = tempfile.mkstemp(dir=str(path.parent), prefix=".ledger-", suffix=".tmp")
     try:
-        with os.fdopen(handle, "w", encoding="utf-8") as stream:
+        # newline="\n": LF on every platform, like every other file the skill writes.
+        with os.fdopen(handle, "w", encoding="utf-8", newline="\n") as stream:
             stream.write(text)
         os.replace(temporary, path)
     finally:
@@ -398,6 +399,7 @@ def _selftest() -> int:
 
 
 def main(argv: Optional[Sequence[str]] = None) -> int:
+    utf8_stdio()
     ap = argparse.ArgumentParser(prog="session_ledger.py",
                                  description=__doc__.splitlines()[0])
     sub = ap.add_subparsers(dest="command", required=True)

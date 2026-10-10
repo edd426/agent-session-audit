@@ -3,7 +3,7 @@
 
 Generates the demo into a temporary directory, runs each analysis on it the
 way a user would (as a subprocess, with the documented flags), and checks
-that each one produces non-trivial output. Never reads real history.
+that each one produces non-trivial output. Never reads your own transcripts.
 
     python3 scripts/test_demo_history.py
 """
@@ -26,7 +26,7 @@ HERE = Path(__file__).resolve().parent
 def run(*args) -> str:
     proc = subprocess.run([sys.executable] + [str(a) for a in args], cwd=str(HERE),
                           stdout=subprocess.PIPE, stderr=subprocess.PIPE,
-                          universal_newlines=True, timeout=900)
+                          encoding="utf-8", errors="replace", timeout=900)
     if proc.returncode:
         raise AssertionError("%s exited %d:\n%s" % (Path(str(args[0])).name, proc.returncode,
                                                     (proc.stderr or proc.stdout)[-2000:]))
@@ -88,7 +88,7 @@ class DemoHistoryTest(unittest.TestCase):
         (stranger / "keep.txt").write_text("not ours", encoding="utf-8")
         proc = subprocess.run([sys.executable, str(HERE / "demo_history.py"), "--out",
                                str(stranger), "--force"], stdout=subprocess.PIPE,
-                              stderr=subprocess.PIPE, universal_newlines=True)
+                              stderr=subprocess.PIPE, encoding="utf-8", errors="replace")
         self.assertEqual(proc.returncode, 2)
         self.assertTrue((stranger / "keep.txt").exists())
 
@@ -200,4 +200,7 @@ class DemoHistoryTest(unittest.TestCase):
 
 
 if __name__ == "__main__":
+    sys.path.insert(0, str(HERE))
+    from audit_common import utf8_stdio
+    utf8_stdio()
     unittest.main(verbosity=2)

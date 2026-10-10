@@ -213,7 +213,7 @@ def selftest():
                          "message": {"role": "user", "content": [
                              {"type": "tool_result", "tool_use_id": "t%d" % n,
                               "content": "y" * 4000}]}})
-        with open(os.path.join(proj, "s1.jsonl"), "w") as handle:
+        with open(os.path.join(proj, "s1.jsonl"), "w", encoding="utf-8") as handle:
             for row in rows:
                 handle.write(_json.dumps(row) + "\n")
         tts, cts, lm, res = collect(tmp, datetime(2020, 1, 1, tzinfo=timezone.utc))
@@ -263,6 +263,7 @@ def write_ledger(path, results, scope=None):
           f"{stats['rows_added']} added; {session_ledger.headline(path)}")
 
 def main():
+    audit_common.utf8_stdio()
     # What this prints shows the home folder as `~`, like the JSON it writes.
     with audit_common.home_relative_stdout():
         return _main()

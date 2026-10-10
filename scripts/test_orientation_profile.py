@@ -519,7 +519,7 @@ def main():
         check("the index has no button that looks like it runs something",
               "run here" not in pages["index.html"].lower())
         check("light/dark aware", "prefers-color-scheme" in page)
-        summary_lines = [l for l in json.loads((out / "orientation.json").read_text())["summary"].splitlines() if l.strip()]
+        summary_lines = [l for l in json.loads((out / "orientation.json").read_text(encoding="utf-8"))["summary"].splitlines() if l.strip()]
         check("summary is five lines or fewer", len(summary_lines) <= 5, len(summary_lines))
 
         check("the report writes no model-tier page",
@@ -581,7 +581,7 @@ def main():
         check("no URL / email / GUID / secret-shaped string in --redact output",
               not hits, hits[:6])
         check("--redact drops per-session records",
-              not json.loads((rout / "orientation.json").read_text()).get("sessions"))
+              not json.loads((rout / "orientation.json").read_text(encoding="utf-8")).get("sessions"))
         check("--redact hashes the cwd", "/w/proj-a" not in redacted)
         default_blob = ((out / "orientation.json").read_text(encoding="utf-8")
                         + "".join(read_pages(out).values()))
@@ -2369,6 +2369,7 @@ def pickup_checks(root, tmp):
 
 
 if __name__ == "__main__":
+    op.audit_common.utf8_stdio()          # check names carry → ≥ … on every platform
     if len(sys.argv) > 2 and sys.argv[1] == "--privacy-check":
         sys.exit(privacy_check(sys.argv[2]))
     sys.exit(main())

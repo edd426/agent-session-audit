@@ -179,6 +179,7 @@ def screenshot(chrome: str, source: Path, out: Path, width: int, profile: Path) 
 
 
 def main(argv=None) -> int:
+    audit_common.utf8_stdio()
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("directory", help="a report directory written by `report`")
     ap.add_argument("--widths", default="1400,1000",

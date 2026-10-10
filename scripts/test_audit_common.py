@@ -98,7 +98,8 @@ class FilterTest(unittest.TestCase):
                      ["compact_economics.py", "--help"],
                      ["tool_bloat.py", "--help"]):
             out = subprocess.run([sys.executable, os.path.join(HERE, argv[0])] + argv[1:],
-                                 capture_output=True, text=True, timeout=120).stdout
+                                 capture_output=True, text=True, encoding="utf-8",
+                                 errors="replace", timeout=120).stdout
             for flag in ("--include-cwd-pattern", "--exclude-cwd-pattern"):
                 self.assertIn(flag, out,
                               "%s does not advertise %s" % (" ".join(argv), flag))
@@ -262,7 +263,8 @@ class SameCoverageTest(unittest.TestCase):
             rc = subprocess.run(
                 [sys.executable, os.path.join(HERE, "claude_cache_audit.py"),
                  "--root", root, "--output-dir", out_a],
-                capture_output=True, text=True, timeout=600)
+                capture_output=True, text=True, encoding="utf-8", errors="replace",
+                timeout=600)
             self.assertEqual(rc.returncode, 0, rc.stderr)
             with open(os.path.join(out_a, "metrics.json"), encoding="utf-8") as fh:
                 metrics = json.load(fh)
@@ -273,7 +275,8 @@ class SameCoverageTest(unittest.TestCase):
             rc = subprocess.run(
                 [sys.executable, os.path.join(HERE, "orientation_profile.py"), "sessions",
                  "--root", root, "--json-out", os.path.join(out_b, "o.json")],
-                capture_output=True, text=True, timeout=600)
+                capture_output=True, text=True, encoding="utf-8", errors="replace",
+                timeout=600)
             self.assertEqual(rc.returncode, 0, rc.stderr)
             with open(os.path.join(out_b, "o.json"), encoding="utf-8") as fh:
                 payload = json.load(fh)
@@ -289,4 +292,5 @@ class SameCoverageTest(unittest.TestCase):
 
 
 if __name__ == "__main__":
+    ac.utf8_stdio()
     unittest.main(verbosity=2)

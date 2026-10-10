@@ -251,6 +251,22 @@ class HomeRelativeStream:
         return getattr(self._stream, name)
 
 
+def utf8_stdio() -> None:
+    """Write UTF-8 to stdout and stderr, whatever the locale says.
+
+    On Windows a redirected or piped stream uses the locale code page
+    (cp1252), which cannot encode the → ≥ × ✓ this skill prints: a report
+    redirected to a file would crash, and a reader decoding UTF-8 would choke.
+    Called first in every script's main().
+    """
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, "reconfigure"):          # a real text stream, not a StringIO
+            try:
+                stream.reconfigure(encoding="utf-8", errors="replace")
+            except (ValueError, OSError):             # detached or already closed
+                pass
+
+
 def home_relative_stdout():
     """`with home_relative_stdout(): ...` -- what an analysis prints shows `~`."""
     return contextlib.redirect_stdout(HomeRelativeStream(sys.stdout))

@@ -12,7 +12,7 @@ compact_economics.py and tool_bloat.py read `DIR/projects` the same way).
 
 EVERYTHING IN IT IS INVENTED: a developer under /home/dev/src working on six
 neutral projects between 2026-08-24 and 2026-10-03. It exists so the report can
-be demonstrated, screenshotted and tested without anyone's real history.
+be demonstrated, screenshotted and tested without anyone's own transcripts.
 Deterministic: the same seed writes byte-identical files.
 
 Shapes it reproduces, because the parsers depend on them (see
@@ -1287,6 +1287,8 @@ def generate(out: Path, seed: int = SEED) -> Dict[str, Any]:
 
 
 def main(argv: Optional[List[str]] = None) -> int:
+    from audit_common import utf8_stdio      # UTF-8 output on every platform
+    utf8_stdio()
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--out", required=True, help="directory to write the fake config root into")
     parser.add_argument("--seed", type=int, default=SEED,

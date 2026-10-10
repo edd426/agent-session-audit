@@ -1475,6 +1475,7 @@ def parser() -> argparse.ArgumentParser:
 
 
 def main(argv: Optional[Sequence[str]] = None) -> int:
+    audit_common.utf8_stdio()
     with audit_common.home_relative_stdout():
         return _main(argv)
 
