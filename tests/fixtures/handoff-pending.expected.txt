@@ -1,0 +1,24 @@
+Handoff-note read-back — does writing a short handover note pay for itself?
+  format    references/orientation-and-threads.md §2b (the CSV and the read-back rules)
+  pairing   a pair is a sitting with sessions in both arms; its value in an arm is the median of its sessions in that arm (the sitting is the block)
+  rate      note_minutes converted at $100.00/hour = $1.6667/minute; change it with --minute-rate-usd. Every net-value number below moves with this rate, so it is stated here rather than buried in the code.
+
+  session ends logged                3
+  log lines skipped as malformed     0
+  PENDING ends                       3   (a real sitting, no successor yet: not a data point)
+  UNMATCHED ends                     0   (no sitting in the history has that folder)
+  successor sessions joined          0   (—)
+  usable pairs (sittings, both arms) 0
+
+------------------------------------------------------------------------------
+UNDERPOWERED: 0 usable pair(s), below the stated floor of 16.
+Smallest effect this can detect, set in advance: 16 usable pairs detect "the note
+wins in about 3 sittings out of 4" and nothing smaller. A real but modest effect
+(the note helps 60 % of the time) will not show at that size. The honest report
+of that result is "underpowered", not "no effect".
+  (references/orientation-and-threads.md §2b, "What the read-back does")
+------------------------------------------------------------------------------
+
+No pair yet, so there is no comparison to print. 3 end(s) are logged and waiting
+for a successor; keep logging — the CSV is the artefact and the read-back is
+retrospective.

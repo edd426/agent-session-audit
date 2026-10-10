@@ -1,0 +1,4 @@
+timestamp,tool,cwd,arm,note_path_or_empty,note_minutes
+2026-09-20T12:00:00Z,claude-code,/w/handoff-alpha,NOTE,HANDOFF.md,4
+2026-09-20T13:00:00Z,claude-code,/w/handoff-beta,NONE,,0
+2026-09-20T14:00:00Z,claude-code,/w/handoff-alpha,NONE,,0

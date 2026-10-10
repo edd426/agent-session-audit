@@ -1,0 +1,4 @@
+interface:
+  display_name: "Agent Session Audit"
+  short_description: "Audit local agent sessions: where the tokens went, and which cache lifetime fits"
+  default_prompt: "Use $agent-session-audit to analyze my local agent history and tell me where my tokens went."

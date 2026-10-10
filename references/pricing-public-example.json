@@ -1,0 +1,140 @@
+{
+  "schema_version": 2,
+  "default_table_id": "anthropic-list-2026-09-06",
+  "how_models_are_matched": "Exact model id first (longest matching key wins, so claude-fable-5-1 never resolves as claude-fable-5), then model_rules regexes in order. A trailing [1m] or -1m context marker is stripped before matching: it records the 1M-context selection, not a price tier. `<synthetic>` is not a model -- Claude Code stamps it on records it injects itself -- and is excluded from the price-coverage denominator entirely.",
+  "tables": {
+    "anthropic-list-2026-09-06": {
+      "currency": "USD",
+      "effective_from": "2026-09-06",
+      "effective_through": null,
+      "description": "Anthropic first-party API list rates, per million tokens, as documented on 2026-09-06. Estimation weights, not an invoice: subscription plans are not billed this way, and enterprise rates differ. Verify before financial use, and replace or override this file (--pricing-file) when your rates differ.",
+      "source": "Anthropic list prices as published on 2026-09-06.",
+      "cache_multipliers": {
+        "read": 0.1,
+        "write_5m": 1.25,
+        "write_1h": 2.0,
+        "note": "Applied uniformly by every analysis in this skill. KNOWN GAP: Claude Fable 5.1 publishes a flat $0.25/MTok cache-read rate rather than 0.1x its input rate; the scripts do not model per-model cache rates, so Fable 5.1 cache reads are overstated (0.1 x $10 = $1.00/MTok assumed vs $0.25 published). Recorded rather than silently absorbed."
+      },
+      "models": {
+        "claude-fable-5-1": {
+          "input": 10.0,
+          "output": 50.0
+        },
+        "claude-fable-5": {
+          "input": 10.0,
+          "output": 50.0
+        },
+        "claude-opus-5": {
+          "input": 5.0,
+          "output": 25.0
+        },
+        "claude-opus-4-8": {
+          "input": 5.0,
+          "output": 25.0
+        },
+        "claude-opus-4-7": {
+          "input": 5.0,
+          "output": 25.0
+        },
+        "claude-opus-4-6": {
+          "input": 5.0,
+          "output": 25.0
+        },
+        "claude-sonnet-5": {
+          "input": 2.0,
+          "output": 10.0
+        },
+        "claude-sonnet-4-6": {
+          "input": 3.0,
+          "output": 15.0
+        },
+        "claude-haiku-4-5": {
+          "input": 1.0,
+          "output": 5.0
+        },
+        "claude-haiku-4-5-20251001": {
+          "input": 1.0,
+          "output": 5.0
+        }
+      },
+      "model_rules": [
+        {
+          "pattern": "^opus$",
+          "input": 5.0,
+          "output": 25.0,
+          "note": "Claude Code writes the bare alias on some records; it resolves to the latest Opus (claude-opus-5 as of 2026-09-06), same rate."
+        },
+        {
+          "pattern": "^fable$",
+          "input": 10.0,
+          "output": 50.0,
+          "note": "bare alias -> latest Fable (claude-fable-5-1), same rate as claude-fable-5."
+        },
+        {
+          "pattern": "^sonnet$",
+          "input": 2.0,
+          "output": 10.0,
+          "note": "bare alias -> claude-sonnet-5."
+        },
+        {
+          "pattern": "^haiku$",
+          "input": 1.0,
+          "output": 5.0,
+          "note": "bare alias -> claude-haiku-4-5."
+        }
+      ]
+    },
+    "anthropic-list-2026-07-12-sonnet5-promo": {
+      "currency": "USD",
+      "effective_from": "2026-07-12",
+      "effective_through": "2026-08-31",
+      "description": "SUPERSEDED by anthropic-list-2026-09-06; kept so older reports can be reproduced. It prices no Fable, Opus 5 or Opus 4.6, so coverage against a current history is low and the scripts will say so. Example Anthropic API list-price view with Sonnet 5 introductory pricing. Verify before financial use.",
+      "models": {
+        "claude-haiku-4-5-20251001": {
+          "input": 1.0,
+          "output": 5.0
+        },
+        "claude-sonnet-4-6": {
+          "input": 3.0,
+          "output": 15.0
+        },
+        "claude-sonnet-5": {
+          "input": 2.0,
+          "output": 10.0
+        },
+        "claude-opus-4-8": {
+          "input": 5.0,
+          "output": 25.0
+        }
+      }
+    },
+    "anthropic-list-standard-post-2026-08-31": {
+      "currency": "USD",
+      "effective_from": "2026-09-01",
+      "effective_through": null,
+      "description": "SUPERSEDED by anthropic-list-2026-09-06; kept so older reports can be reproduced. It prices no Fable, Opus 5 or Opus 4.6, so coverage against a current history is low and the scripts will say so. Example standard reference view after the Sonnet 5 introductory period. Verify before financial use.",
+      "models": {
+        "claude-haiku-4-5-20251001": {
+          "input": 1.0,
+          "output": 5.0
+        },
+        "claude-sonnet-4-6": {
+          "input": 3.0,
+          "output": 15.0
+        },
+        "claude-sonnet-5": {
+          "input": 3.0,
+          "output": 15.0
+        },
+        "claude-opus-4-8": {
+          "input": 5.0,
+          "output": 25.0
+        }
+      }
+    }
+  },
+  "copilot_sessions": {
+    "what_this_is": "NOT a price table. GitHub Copilot tools (VS Code Copilot Chat, Copilot CLI) expose cost as AI credits, read off the tool's own usage display. Credits appear in no transcript store, and no $/M-token rate is published for Copilot models. Do not invent one: an invented rate is indistinguishable from a measured one downstream.",
+    "how_a_report_should_use_this": "Copilot stores record AI credits and usually no token counts. A Copilot session with no token counts gets est. cost null (est_cost_usd and orientation_cost_usd), shown as \"—\": it is left out of totals and medians, counted as unpriced in price coverage, and counted in scope.sessions_without_token_counts. It never gets 0. If a Copilot record carries tokens and names a model this table prices, the table rate applies. Where a credit figure is known, quote it as credits with the date it was read, never as dollars."
+  }
+}

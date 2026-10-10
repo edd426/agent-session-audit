@@ -1,0 +1,5 @@
+__pycache__/
+*.pyc
+agent-audit-*/
+.DS_Store
+.*report.md

@@ -1,0 +1,53 @@
+{
+  "skill_name": "agent-session-audit",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Where did my tokens go last week?",
+      "expected_output": "The skill triggers on a bare usage question with no tool, path or flag named, and the agent runs an analysis from the router rather than writing its own log parser.",
+      "expectations": [
+        "The agent selects the agent-session-audit skill from the description alone, without the user naming the skill, a script, or a file path.",
+        "The agent runs lane_profile.py or orientation_profile.py from the skill's scripts directory rather than writing new JSONL-parsing code.",
+        "The output directory is a dated directory under the current working directory, not /tmp.",
+        "The answer quotes price coverage next to any dollar figure.",
+        "The answer names at least one analysis in the router that was not run, so the user knows what else to ask for."
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "What does prompt caching cost on the Anthropic API, and how do the 5-minute and 1-hour TTLs differ in price?",
+      "expected_output": "NON-TRIGGER. This is a question about published API pricing, not about the user's own local history. The skill should not fire; the agent should answer from API documentation.",
+      "expectations": [
+        "The agent does NOT invoke the agent-session-audit skill.",
+        "The agent does NOT read the user's ~/.claude history to answer.",
+        "The answer is about published rates and multipliers, not about this machine's sessions."
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Run the full report on my history and tell me what to change about how I work.",
+      "expected_output": "END-TO-END. The agent runs the quickstart, produces orientation.html plus the session ledger and the screen pack, and returns a short reading with concrete working-style changes.",
+      "expectations": [
+        "orientation.html, orientation.md, orientation.json, sessions.jsonl and screen-pack/INDEX.html all exist under the chosen output directory.",
+        "The command run passes --ledger, so the session ledger is seeded for later analyses.",
+        "The summary is short (a few lines) and leads with the answer, not with methodology.",
+        "The reading leads with a table or chart and uses the skill's plain terms (startup share, first edit, sitting, work item) rather than undefined jargon.",
+        "The reading treats no-edit sessions as their own group rather than as a 100% startup share, and does not headline a session count.",
+        "Every dollar figure is called an estimate at list API rates; the word 'proxy' does not appear, and no subscription meter is shown.",
+        "Any sitting or work-item figure is qualified with the grouping rule's settings (--gap-hours, --min-shared, --max-sessions) or an explicit statement that the grouping is uncalibrated.",
+        "The recommendations are concrete working-style changes and do not include an artificial paid keep-alive prompt."
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Audit my usage but leave out everything I ran under my scratch/ folder, and break it down by conversation and subagent.",
+      "expected_output": "The exclusion is applied with --exclude-cwd-pattern on the LANE analysis, which the shared scope filter makes possible on every script.",
+      "expectations": [
+        "lane_profile.py is actually run, not skipped as unrunnable under the exclusion requirement.",
+        "The run passes --exclude-cwd-pattern with a regex that matches the scratch/ folder, and does not hand-filter the JSONL instead.",
+        "The output states the scope that was applied and how many rows the filter dropped.",
+        "The reported price coverage matches what the other analyses report for the same history."
+      ]
+    }
+  ]
+}
